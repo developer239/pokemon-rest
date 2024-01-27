@@ -16,7 +16,7 @@ import {
 import { AuthModule } from 'src/modules/auth/auth.module'
 import { DatabaseModule } from 'src/modules/database/database.module'
 import { HomeModule } from 'src/modules/home/home.module'
-import { PokemonModule } from "src/modules/pokemon/pokemon.module";
+import { PokemonModule } from 'src/modules/pokemon/pokemon.module'
 import { HttpExceptionFilter } from 'src/utils/filters/http-exception.filter'
 import { validationOptions } from 'src/utils/validation-options'
 

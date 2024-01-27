@@ -31,10 +31,7 @@ export class SessionController {
   @ApiOkResponse({
     type: EmailLoginResponse,
   })
-  public login(
-    @Body() _: EmailLoginRequest,
-    @GetUserPayload() user: User
-  ) {
+  public login(@Body() _: EmailLoginRequest, @GetUserPayload() user: User) {
     return this.service.login(user)
   }
 }

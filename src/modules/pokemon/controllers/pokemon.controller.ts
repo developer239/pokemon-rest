@@ -7,14 +7,20 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common'
-import { AuthGuard } from "@nestjs/passport";
-import { ApiBearerAuth, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import { AuthGuard } from '@nestjs/passport'
+import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger'
 import { Public } from 'src/modules/auth/decorators/public.decorator'
 import { GetUserPayload } from 'src/modules/auth/decorators/user.decorator'
 import { User } from 'src/modules/auth/entities/user.entity'
-import { OptionalAuthGuard } from "src/modules/auth/guards/optional-auth.guard";
+import { OptionalAuthGuard } from 'src/modules/auth/guards/optional-auth.guard'
 import { ListPokemonsQuery } from 'src/modules/pokemon/dto/list-pokemons-query.dto'
-import { Pokemon } from "src/modules/pokemon/dto/pokemon.dto";
+import { Pokemon } from 'src/modules/pokemon/dto/pokemon.dto'
 import { PokemonService } from 'src/modules/pokemon/services/pokemon.service'
 
 @ApiTags('Pokemon')

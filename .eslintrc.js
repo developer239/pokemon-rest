@@ -7,5 +7,5 @@ module.exports = {
   ],
   rules: {
     'no-void': 1,
-  }
+  },
 }

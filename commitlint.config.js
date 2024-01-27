@@ -1,5 +1,3 @@
 module.exports = {
-  extends: [
-    '@linters/commitlint-config',
-  ],
+  extends: ['@linters/commitlint-config'],
 }

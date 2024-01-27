@@ -43,7 +43,6 @@ async function bootstrap() {
     `\x1b[34m 📚Docs running on: http://localhost:${appConfigValues.port}/docs \x1b[34m`,
     'NestApplication'
   )
-
 }
 
 void bootstrap()

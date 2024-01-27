@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Type } from "class-transformer";
+import { Type } from 'class-transformer'
 import {
   IsBoolean,
   IsNumber,
@@ -10,11 +10,19 @@ import {
 } from 'class-validator'
 
 export class ListPokemonsQuery {
-  @ApiProperty({ description: 'Offset for pagination', default: 0, required: false })
+  @ApiProperty({
+    description: 'Offset for pagination',
+    default: 0,
+    required: false,
+  })
   @IsOptional()
   offset?: number = 0
 
-  @ApiProperty({ description: 'Limit for pagination', default: 10, required: false })
+  @ApiProperty({
+    description: 'Limit for pagination',
+    default: 10,
+    required: false,
+  })
   @Type(() => Number)
   @IsNumber()
   @Min(1)

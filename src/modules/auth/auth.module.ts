@@ -10,7 +10,7 @@ import { User } from 'src/modules/auth/entities/user.entity'
 import { AuthService } from 'src/modules/auth/services/auth.service'
 import { JwtStrategy } from 'src/modules/auth/strategies/jwt.strategy'
 import { LocalStrategy } from 'src/modules/auth/strategies/local.strategy'
-import { DoesNotExist } from "src/utils/validators/does-not-exist.validator";
+import { DoesNotExist } from 'src/utils/validators/does-not-exist.validator'
 
 @Module({
   imports: [
@@ -27,16 +27,8 @@ import { DoesNotExist } from "src/utils/validators/does-not-exist.validator";
       }),
     }),
   ],
-  controllers: [
-    UsersController,
-    SessionController,
-  ],
-  providers: [
-    DoesNotExist,
-    AuthService,
-    JwtStrategy,
-    LocalStrategy,
-  ],
+  controllers: [UsersController, SessionController],
+  providers: [DoesNotExist, AuthService, JwtStrategy, LocalStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

@@ -6,7 +6,5 @@ export default defineConfig({
     root: './',
     include: ['**/*.{spec,e2e-spec}.?(c|m)[jt]s?(x)'],
   },
-  plugins: [
-    swc.vite(),
-  ],
+  plugins: [swc.vite()],
 })

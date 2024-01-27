@@ -8,9 +8,7 @@
       "dynamicImport": true
     },
     "paths": {
-      "*": [
-        "*"
-      ]
+      "*": ["*"]
     },
     "transform": {
       "legacyDecorator": true,

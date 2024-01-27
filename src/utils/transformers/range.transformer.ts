@@ -6,7 +6,7 @@ export class RangeTransformer implements ValueTransformer {
     const match = regex.exec(value)
 
     return {
-      minimum: parseFloat(match?.[1] || '0') ,
+      minimum: parseFloat(match?.[1] || '0'),
       maximum: parseFloat(match?.[2] || '0'),
     }
   }

@@ -12,7 +12,7 @@ import { User } from 'src/modules/auth/entities/user.entity'
 import { Attack } from 'src/modules/pokemon/entities/attack.entity'
 import { EvolutionRequirement } from 'src/modules/pokemon/entities/evolution-requirement.enity'
 import { BaseEntity } from 'src/utils/base.entity'
-import { RangeTransformer } from "src/utils/transformers/range.transformer";
+import { RangeTransformer } from 'src/utils/transformers/range.transformer'
 
 @Entity()
 export class Pokemon extends BaseEntity {
