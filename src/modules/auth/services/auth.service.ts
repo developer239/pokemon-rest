@@ -1,12 +1,10 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 import * as bcrypt from 'bcrypt'
 import { Repository } from 'typeorm'
+import { EmailLoginRequest } from 'src/modules/auth/dto/email-login.dto'
+import { EmailRegisterRequest } from 'src/modules/auth/dto/email-register.dto'
 import { User } from 'src/modules/auth/entities/user.entity'
 
 @Injectable()
@@ -43,7 +41,7 @@ export class AuthService {
     return user
   }
 
-  async login(input: LoginInput) {
+  async login(input: EmailLoginRequest) {
     const user = await this.validateUserByEmailPassword(
       input.email,
       input.password
@@ -53,6 +51,17 @@ export class AuthService {
       throw new UnauthorizedException()
     }
 
+    return this.createLoginResponse(user)
+  }
+
+  async register(input: EmailRegisterRequest) {
+    const user = this.usersRepository.create(input)
+    await this.usersRepository.save(user)
+
+    return this.createLoginResponse(user)
+  }
+
+  createLoginResponse(user: User) {
     const token = this.jwtService.sign({
       id: user.id,
     })
@@ -61,18 +70,5 @@ export class AuthService {
       accessToken: token,
       user,
     }
-  }
-
-  async register(input: RegisterInput) {
-    const existingUser = await this.usersRepository.findOneBy({
-      email: input.email,
-    })
-
-    if (existingUser) {
-      throw new BadRequestException('User already exists')
-    }
-
-    const user = this.usersRepository.create(input)
-    return this.usersRepository.save(user)
   }
 }

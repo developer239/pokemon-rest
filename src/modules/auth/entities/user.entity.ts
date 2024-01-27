@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcrypt'
+import { Exclude } from 'class-transformer'
 import {
   Column,
   Entity,
@@ -20,7 +21,9 @@ export class User extends BaseEntity {
   @Column({ unique: true, nullable: true })
   email: string
 
-  @Column({ nullable: true }) password: string
+  @Exclude()
+  @Column({ nullable: true })
+  password: string
 
   @ManyToMany(() => Pokemon, (pokemon) => pokemon.favoritedBy, {
     cascade: true,
