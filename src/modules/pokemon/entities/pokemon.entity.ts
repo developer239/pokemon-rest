@@ -62,14 +62,17 @@ export class Pokemon extends BaseEntity {
   @ManyToMany(() => User, (user) => user.favoritePokemons)
   favoritedBy: Relation<User>[]
 
-  @ManyToMany(() => Attack, (attack) => attack.pokemons, { cascade: true })
+  @ManyToMany(() => Attack, (attack) => attack.pokemons, {
+    cascade: true,
+    eager: true,
+  })
   @JoinTable()
   attacks: Relation<Attack>[]
 
   @OneToOne(
     () => EvolutionRequirement,
     (evolutionRequirement) => evolutionRequirement.pokemon,
-    { cascade: true }
+    { cascade: true, eager: true }
   )
   evolutionRequirements: Relation<EvolutionRequirement>
 

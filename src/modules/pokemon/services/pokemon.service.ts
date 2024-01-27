@@ -22,7 +22,7 @@ export class PokemonService {
   async addFavorite(id: number, user?: User): Promise<Pokemon> {
     const pokemon = await this.pokemonRepository.findOne({
       where: { id },
-      relations: ['evolutionRequirements', 'evolutions', 'attacks'],
+      relations: ['evolutions'],
     })
 
     if (!pokemon) {
@@ -43,7 +43,7 @@ export class PokemonService {
   async removeFavorite(id: number, user?: User): Promise<Pokemon> {
     const pokemon = await this.pokemonRepository.findOne({
       where: { id },
-      relations: ['evolutionRequirements', 'evolutions', 'attacks'],
+      relations: ['evolutions'],
     })
 
     if (!pokemon) {
@@ -62,7 +62,7 @@ export class PokemonService {
   async findByName(name: string): Promise<Pokemon> {
     const result = await this.pokemonRepository.findOne({
       where: { name },
-      relations: ['evolutionRequirements', 'evolutions', 'attacks'],
+      relations: ['evolutions'],
     })
 
     if (!result) {
@@ -75,7 +75,7 @@ export class PokemonService {
   async findById(id: number): Promise<Pokemon> {
     const result = await this.pokemonRepository.findOne({
       where: { id },
-      relations: ['evolutionRequirements', 'evolutions', 'attacks'],
+      relations: ['evolutions'],
     })
     if (!result) {
       throw new NotFoundException('Pokemon not found')

@@ -1,9 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, PartialType } from '@nestjs/swagger'
 import { IsArray, IsInt, IsNotEmpty, IsNumber, IsString } from 'class-validator'
 import { Attack } from 'src/modules/pokemon/dto/attack.dto'
 import { EvolutionRequirement } from 'src/modules/pokemon/dto/evolution-requirement.dto'
 
-export class Pokemon {
+class Base {
   @ApiProperty()
   @IsNotEmpty()
   @IsInt()
@@ -57,6 +57,16 @@ export class Pokemon {
   @ApiProperty({ type: [Attack] })
   attacks: Attack[]
 
-  @ApiProperty({ type: EvolutionRequirement })
+  @ApiProperty({ type: EvolutionRequirement, required: false })
   evolutionRequirements: EvolutionRequirement
+}
+
+export class Evolution extends PartialType(Base) {}
+
+export class Pokemon extends PartialType(Base) {
+  @ApiProperty({
+    type: [Evolution],
+  })
+  @IsArray()
+  evolutions: Evolution[]
 }
