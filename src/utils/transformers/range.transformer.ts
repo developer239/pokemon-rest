@@ -5,13 +5,9 @@ export class RangeTransformer implements ValueTransformer {
     const regex = /\[(.*),(.*)\)/u
     const match = regex.exec(value)
 
-    if (!match?.[1] || !match?.[2]) {
-      throw new Error('Invalid range format')
-    }
-
     return {
-      minimum: parseFloat(match[1]),
-      maximum: parseFloat(match[2]),
+      minimum: parseFloat(match?.[1] || '0') ,
+      maximum: parseFloat(match?.[2] || '0'),
     }
   }
 
