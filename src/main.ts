@@ -36,7 +36,7 @@ async function bootstrap() {
   await app.listen(appConfigValues.port)
 
   Logger.log(
-    `\x1b[34m Running on: http://localhost:${appConfigValues.port}/api \x1b[34m`,
+    `\x1b[34m Running on: http://localhost:${appConfigValues.port} \x1b[34m`,
     'NestApplication'
   )
   Logger.log(
