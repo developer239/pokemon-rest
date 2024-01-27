@@ -5,6 +5,8 @@ import { useContainer } from 'class-validator'
 import { AppModule } from 'src/app.module'
 import { appConfig, AppConfigType } from 'src/config/app.config'
 
+import 'src/modules/database/seeds/run-seed'
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true })
   useContainer(app.select(AppModule), { fallbackOnErrors: true })
@@ -30,8 +32,16 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document)
 
   await app.listen(appConfigValues.port)
-  Logger.log(`Running on port: ${appConfigValues.port}`, 'NestApplication')
-  Logger.log(`Docs running on: ${appConfigValues.port}/docs`, 'NestApplication')
+
+  Logger.log(
+    `\x1b[34m Running on: http://localhost:${appConfigValues.port}/api \x1b[34m`,
+    'NestApplication'
+  )
+  Logger.log(
+    `\x1b[34m 📚Docs running on: http://localhost:${appConfigValues.port}/docs \x1b[34m`,
+    'NestApplication'
+  )
+
 }
 
 void bootstrap()
