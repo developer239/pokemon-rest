@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Type } from 'class-transformer'
+import { Transform, Type } from 'class-transformer'
 import {
   IsBoolean,
   IsNumber,
@@ -8,6 +8,7 @@ import {
   Max,
   Min,
 } from 'class-validator'
+import { booleanTransformer } from 'src/utils/transformers/boolean.transformer'
 
 export class ListPokemonsQuery {
   @ApiProperty({
@@ -41,7 +42,7 @@ export class ListPokemonsQuery {
   type?: string
 
   @ApiProperty({ description: 'Filter by favorite status', required: false })
-  @Type(() => Boolean)
+  @Transform(booleanTransformer)
   @IsBoolean()
   @IsOptional()
   isFavorite?: boolean
