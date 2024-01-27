@@ -113,6 +113,57 @@ describe('[users] controller', () => {
       })
     })
 
+    describe('when isFavorite query provided', () => {
+      describe('when isFavorite is true', () => {
+        it('should return a list of pokemons that are favorited by user', async () => {
+          // Arrange
+          const { user, accessToken } =
+            await authTestingEntityService.createAuthenticatedUser(jwtService)
+          const { pokemon } =
+            await pokemonTestingEntityService.createTestPokemon(undefined, {
+              favoritedBy: [user.id],
+            })
+
+          // Act
+          const server = app.getHttpServer()
+          const response = await request(server)
+            .get('/api/v1/pokemons')
+            .query({ isFavorite: true })
+            .set('Authorization', `Bearer ${accessToken}`)
+
+          // Assert
+          expect(response.body.count).toBe(1)
+          expect(response.body.items).toHaveLength(1)
+          expect(response.body.items[0].id).toStrictEqual(pokemon.id)
+          expect(response.body.items[0].name).toStrictEqual(pokemon.name)
+          expect(response.status).toBe(200)
+        })
+      })
+
+      describe('when isFavorite is false', () => {
+        it('should return a list of pokemons that are not favorited by user', async () => {
+          // Arrange
+          const { user, accessToken } =
+            await authTestingEntityService.createAuthenticatedUser(jwtService)
+          await pokemonTestingEntityService.createTestPokemon(undefined, {
+            favoritedBy: [user.id],
+          })
+
+          // Act
+          const server = app.getHttpServer()
+          const response = await request(server)
+            .get('/api/v1/pokemons')
+            .query({ isFavorite: false })
+            .set('Authorization', `Bearer ${accessToken}`)
+
+          // Assert
+          expect(response.body.count).toBe(0)
+          expect(response.body.items).toHaveLength(0)
+          expect(response.status).toBe(200)
+        })
+      })
+    })
+
     describe('when multiple params are provided', () => {
       it('should return a list of pokemons that match the params', async () => {
         // Arrange

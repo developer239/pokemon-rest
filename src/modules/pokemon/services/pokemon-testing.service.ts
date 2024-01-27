@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { Injectable } from '@nestjs/common'
-import { rand, randNumber, randSuperheroName, randBinary } from '@ngneat/falso'
+import { rand, randNumber, randSuperheroName } from '@ngneat/falso'
 import { AttackCategory } from 'src/modules/pokemon/entities/attack.entity'
 import { Pokemon } from 'src/modules/pokemon/entities/pokemon.entity'
 import { randMultiple } from 'src/modules/testing/helpers'
@@ -27,7 +27,6 @@ export class PokemonTestingService extends TestingEntityService {
       fleeRate: randNumber({ min: 0, max: 1, fractionDigits: 2 }),
       maxCP: randNumber({ min: 1, max: 10000 }),
       maxHP: randNumber({ min: 1, max: 10000 }),
-      isFavorite: Boolean(randBinary()),
       ...data,
     }
   }
@@ -54,7 +53,10 @@ export class PokemonTestingService extends TestingEntityService {
     }
   }
 
-  public async createTestPokemon(data?: Partial<IPokemonTestData>) {
+  public async createTestPokemon(
+    data?: Partial<IPokemonTestData>,
+    relations?: IPokemonTestDataRelations
+  ) {
     const pokemonData = this.createPokemonData(data)
 
     const pokemon = await this.saveFixture(Pokemon, {
@@ -66,6 +68,7 @@ export class PokemonTestingService extends TestingEntityService {
         this.createPokemonAttackData({ category: AttackCategory.SPECIAL }),
       ],
       evolutionRequirements: this.createEvolutionRequirementData(),
+      favoritedBy: relations?.favoritedBy?.map((id) => ({ id })) ?? [],
     })
 
     return {
@@ -120,7 +123,11 @@ interface IPokemonTestData {
   fleeRate: number
   maxCP: number
   maxHP: number
-  isFavorite: boolean
+  favoritedBy?: number[]
+}
+
+interface IPokemonTestDataRelations {
+  favoritedBy?: number[]
 }
 
 interface IPokemonAttackTestData {
