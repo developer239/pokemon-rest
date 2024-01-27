@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function, max-lines */
 import { INestApplication } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
 import request from 'supertest'
 import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest'
 import { AuthModule } from 'src/modules/auth/auth.module'
@@ -14,6 +15,7 @@ describe('[users] controller', () => {
   let databaseService: TestingDatabaseService
   let authTestingEntityService: UserTestingService
   let pokemonTestingEntityService: PokemonTestingService
+  let jwtService: JwtService
 
   describe('GET /pokemons/:id', () => {
     it('should return pokemon by id', async () => {
@@ -107,6 +109,60 @@ describe('[users] controller', () => {
     })
   })
 
+  describe('POST /pokemons/:id/favorite', () => {
+    it('should favorite pokemon', async () => {
+      // Arrange
+      const { pokemon } = await pokemonTestingEntityService.createTestPokemon()
+      const { accessToken } =
+        await authTestingEntityService.createAuthenticatedUser(jwtService)
+
+      // Act
+      const server = app.getHttpServer()
+      const response = await request(server)
+        .post(`/api/v1/pokemons/${pokemon.id}/favorite`)
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      // Assert
+      expect(response.body.id).toStrictEqual(pokemon.id)
+      expect(response.status).toBe(201)
+    })
+
+    describe('when pokemon does not exist', () => {
+      it('should return 404 status code', async () => {
+        // Arrange
+        const pokemonId = 999
+        const { accessToken } =
+          await authTestingEntityService.createAuthenticatedUser(jwtService)
+
+        // Act
+        const server = app.getHttpServer()
+        const response = await request(server)
+          .post(`/api/v1/pokemons/${pokemonId}/favorite`)
+          .set('Authorization', `Bearer ${accessToken}`)
+
+        // Assert
+        expect(response.status).toBe(404)
+      })
+    })
+
+    describe('when user not authorized', () => {
+      it('should return 401 status code', async () => {
+        // Arrange
+        const { pokemon } =
+          await pokemonTestingEntityService.createTestPokemon()
+
+        // Act
+        const server = app.getHttpServer()
+        const response = await request(server).post(
+          `/api/v1/pokemons/${pokemon.id}/favorite`
+        )
+
+        // Assert
+        expect(response.status).toBe(401)
+      })
+    })
+  })
+
   //
   //
   // setup
@@ -120,6 +176,7 @@ describe('[users] controller', () => {
     databaseService = app.get(TestingDatabaseService)
     authTestingEntityService = app.get(UserTestingService)
     pokemonTestingEntityService = app.get(PokemonTestingService)
+    jwtService = app.get(JwtService)
   })
 
   beforeEach(async () => {

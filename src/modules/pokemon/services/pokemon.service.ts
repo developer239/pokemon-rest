@@ -35,9 +35,9 @@ export class PokemonService {
       .of(pokemon)
       .add(user)
 
-    const result = await this.pokemonRepository.save(pokemon)
+    await this.pokemonRepository.save(pokemon)
 
-    return result
+    return pokemon
   }
 
   async removeFavorite(id: number, user?: User): Promise<Pokemon> {
