@@ -17,39 +17,23 @@ describe('[users] controller', () => {
   let pokemonTestingEntityService: PokemonTestingService
   let jwtService: JwtService
 
-  describe('GET /pokemons/:id', () => {
-    it('should return pokemon by id', async () => {
+  describe('GET /pokemons/types', () => {
+    it('should return list of pokemon types', async () => {
       // Arrange
-      const result = await pokemonTestingEntityService.createTestPokemon()
-      const pokemonId = result.pokemon.id
-      const pokemonName = result.pokemon.name
+      const pokemons =
+        await pokemonTestingEntityService.createTestPokemonCount(2)
+
+      const expectedTypes = [
+        ...new Set(pokemons.flatMap((pokemon) => pokemon.types)),
+      ].sort()
 
       // Act
       const server = app.getHttpServer()
-      const response = await request(server).get(
-        `/api/v1/pokemons/${pokemonId}`
-      )
+      const response = await request(server).get('/api/v1/pokemons/types')
 
       // Assert
-      expect(response.body.id).toStrictEqual(pokemonId)
-      expect(response.body.name).toStrictEqual(pokemonName)
+      expect(response.body).toStrictEqual(expectedTypes)
       expect(response.status).toBe(200)
-    })
-
-    describe('when pokemon does not exist', () => {
-      it('should return 404 status code', async () => {
-        // Arrange
-        const pokemonId = 999
-
-        // Act
-        const server = app.getHttpServer()
-        const response = await request(server).get(
-          `/api/v1/pokemons/${pokemonId}`
-        )
-
-        // Assert
-        expect(response.status).toBe(404)
-      })
     })
   })
 
@@ -89,23 +73,39 @@ describe('[users] controller', () => {
     })
   })
 
-  describe('GET /pokemons/types', () => {
-    it('should return list of pokemon types', async () => {
+  describe('GET /pokemons/:id', () => {
+    it('should return pokemon by id', async () => {
       // Arrange
-      const pokemons =
-        await pokemonTestingEntityService.createTestPokemonCount(2)
-
-      const expectedTypes = [
-        ...new Set(pokemons.flatMap((pokemon) => pokemon.types)),
-      ].sort()
+      const result = await pokemonTestingEntityService.createTestPokemon()
+      const pokemonId = result.pokemon.id
+      const pokemonName = result.pokemon.name
 
       // Act
       const server = app.getHttpServer()
-      const response = await request(server).get('/api/v1/pokemons/types')
+      const response = await request(server).get(
+        `/api/v1/pokemons/${pokemonId}`
+      )
 
       // Assert
-      expect(response.body).toStrictEqual(expectedTypes)
+      expect(response.body.id).toStrictEqual(pokemonId)
+      expect(response.body.name).toStrictEqual(pokemonName)
       expect(response.status).toBe(200)
+    })
+
+    describe('when pokemon does not exist', () => {
+      it('should return 404 status code', async () => {
+        // Arrange
+        const pokemonId = 999
+
+        // Act
+        const server = app.getHttpServer()
+        const response = await request(server).get(
+          `/api/v1/pokemons/${pokemonId}`
+        )
+
+        // Assert
+        expect(response.status).toBe(404)
+      })
     })
   })
 
