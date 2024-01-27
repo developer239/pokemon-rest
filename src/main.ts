@@ -1,5 +1,9 @@
 import { Logger, VersioningType } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { useContainer } from 'class-validator'
 import { AppModule } from 'src/app.module'
@@ -7,10 +11,12 @@ import { appConfig, AppConfigType } from 'src/config/app.config'
 
 import 'src/modules/database/seeds/run-seed'
 
-// TODO: migrate to Fastify
-
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true })
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter(),
+    { cors: true }
+  )
   useContainer(app.select(AppModule), { fallbackOnErrors: true })
 
   const appConfigValues = app.get<AppConfigType>(appConfig.KEY)

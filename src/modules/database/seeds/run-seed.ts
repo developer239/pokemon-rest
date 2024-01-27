@@ -1,5 +1,9 @@
 import { INestApplication } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify'
 import { DataSource } from 'typeorm'
 import { AuthSeedService } from 'src/modules/database/seeds/auth/auth-seed.service'
 import { PokemonSeedService } from 'src/modules/database/seeds/pokemon/pokemon-seed.service'
@@ -19,7 +23,10 @@ const clearDatabase = async (app: INestApplication) => {
 }
 
 const runSeed = async () => {
-  const app = await NestFactory.create(SeedModule)
+  const app = await NestFactory.create<NestFastifyApplication>(
+    SeedModule,
+    new FastifyAdapter()
+  )
 
   await clearDatabase(app)
 

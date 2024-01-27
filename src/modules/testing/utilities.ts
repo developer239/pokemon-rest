@@ -6,6 +6,10 @@ import {
 import { ModuleMetadata } from '@nestjs/common/interfaces'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify'
 import { Test } from '@nestjs/testing'
 import { useContainer } from 'class-validator'
 import * as Joi from 'joi'
@@ -21,38 +25,40 @@ import { TestingModule } from 'src/modules/testing/testing.module'
 import { validationOptions } from 'src/utils/validation-options'
 
 export const bootstrap = async (metadata: ModuleMetadata) => {
-  const app = (
-    await Test.createTestingModule({
-      imports: [
-        ConfigModule.forRoot({
-          isGlobal: true,
-          load: [databaseConfig, authConfig, appConfig],
-          envFilePath: ['.env.test', '.env'],
-          validationSchema: Joi.object({
-            ...appConfigSchema,
-            ...authConfigSchema,
-            ...databaseConfigSchema,
-          }),
+  const testingModule = await Test.createTestingModule({
+    imports: [
+      ConfigModule.forRoot({
+        isGlobal: true,
+        load: [databaseConfig, authConfig, appConfig],
+        envFilePath: ['.env.test', '.env'],
+        validationSchema: Joi.object({
+          ...appConfigSchema,
+          ...authConfigSchema,
+          ...databaseConfigSchema,
         }),
-        DatabaseModule,
-        TestingModule,
-        ...(metadata.imports ? metadata.imports : []),
-      ],
-      controllers: [...(metadata?.controllers ?? [])],
-      providers: [
-        ...(metadata?.providers ?? []),
-        {
-          provide: APP_PIPE,
-          useValue: new ValidationPipe(validationOptions),
-        },
-        {
-          provide: APP_INTERCEPTOR,
-          useClass: ClassSerializerInterceptor,
-        },
-      ],
-      exports: [...(metadata?.exports ?? [])],
-    }).compile()
-  ).createNestApplication()
+      }),
+      DatabaseModule,
+      TestingModule,
+      ...(metadata.imports ? metadata.imports : []),
+    ],
+    controllers: [...(metadata?.controllers ?? [])],
+    providers: [
+      ...(metadata?.providers ?? []),
+      {
+        provide: APP_PIPE,
+        useValue: new ValidationPipe(validationOptions),
+      },
+      {
+        provide: APP_INTERCEPTOR,
+        useClass: ClassSerializerInterceptor,
+      },
+    ],
+    exports: [...(metadata?.exports ?? [])],
+  }).compile()
+
+  const app = testingModule.createNestApplication<NestFastifyApplication>(
+    new FastifyAdapter()
+  )
 
   useContainer(app.select(AuthModule), { fallbackOnErrors: true })
 
@@ -64,6 +70,7 @@ export const bootstrap = async (metadata: ModuleMetadata) => {
   })
 
   await app.init()
+  await app.getHttpAdapter().getInstance().ready()
 
   return app
 }
