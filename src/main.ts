@@ -7,6 +7,8 @@ import { appConfig, AppConfigType } from 'src/config/app.config'
 
 import 'src/modules/database/seeds/run-seed'
 
+// TODO: migrate to Fastify
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true })
   useContainer(app.select(AppModule), { fallbackOnErrors: true })
