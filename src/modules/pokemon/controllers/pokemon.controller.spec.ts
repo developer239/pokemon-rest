@@ -17,6 +17,137 @@ describe('[users] controller', () => {
   let pokemonTestingEntityService: PokemonTestingService
   let jwtService: JwtService
 
+  describe('GET /pokemons', () => {
+    it('should return list of pokemons', async () => {
+      // Arrange
+      const pokemons =
+        await pokemonTestingEntityService.createTestPokemonCount(3)
+
+      // Act
+      const server = app.getHttpServer()
+      const response = await request(server).get('/api/v1/pokemons')
+
+      // Assert
+      expect(response.body.count).toStrictEqual(pokemons.length)
+      expect(response.body.items).toHaveLength(pokemons.length)
+      expect(response.status).toBe(200)
+    })
+
+    describe('when limit and offset provided', () => {
+      it('should return a list of pokemons with the provided limit and offset', async () => {
+        // Arrange
+        const totalCount = 10
+        await pokemonTestingEntityService.createTestPokemonCount(totalCount)
+
+        const limit = 5
+        const offset = 5
+
+        // Act
+        const server = app.getHttpServer()
+        const response = await request(server)
+          .get('/api/v1/pokemons')
+          .query({ limit, offset })
+
+        // Assert
+        expect(response.body.count).toStrictEqual(totalCount)
+        expect(response.body.items).toHaveLength(limit)
+        expect(response.status).toBe(200)
+      })
+    })
+
+    describe('when search query provided', () => {
+      it('should return a list of pokemons that match the search query', async () => {
+        // Arrange
+        await pokemonTestingEntityService.createTestPokemon()
+        const pokemon1 = await pokemonTestingEntityService.createTestPokemon({
+          name: '123pokemon1',
+        })
+        await pokemonTestingEntityService.createTestPokemon()
+        await pokemonTestingEntityService.createTestPokemon()
+
+        const pokemonToSearch = pokemon1.pokemon
+        const pokemonNameToSearch = '23pokemon'
+
+        // Act
+        const server = app.getHttpServer()
+        const response = await request(server)
+          .get('/api/v1/pokemons')
+          .query({ search: pokemonNameToSearch })
+
+        // Assert
+        expect(response.body.count).toBe(1)
+        expect(response.body.items).toHaveLength(1)
+        expect(response.body.items[0].id).toStrictEqual(pokemonToSearch.id)
+        expect(response.body.items[0].name).toStrictEqual(pokemonToSearch.name)
+        expect(response.status).toBe(200)
+      })
+    })
+
+    describe('when type query provided', () => {
+      it('should return a list of pokemons that match the type query', async () => {
+        // Arrange
+        const pokemon0 = await pokemonTestingEntityService.createTestPokemon({
+          types: ['type0', 'type1'],
+        })
+        await pokemonTestingEntityService.createTestPokemon({
+          types: ['type1', 'type2'],
+        })
+        await pokemonTestingEntityService.createTestPokemon({
+          types: ['type2', 'type3'],
+        })
+        const pokemonToSearch = pokemon0.pokemon
+        const pokemonTypeToSearch = 'type0'
+
+        // Act
+        const server = app.getHttpServer()
+        const response = await request(server)
+          .get('/api/v1/pokemons')
+          .query({ type: pokemonTypeToSearch })
+
+        // Assert
+        expect(response.body.count).toBe(1)
+        expect(response.body.items).toHaveLength(1)
+        expect(response.body.items[0].id).toStrictEqual(pokemonToSearch.id)
+        expect(response.body.items[0].name).toStrictEqual(pokemonToSearch.name)
+        expect(response.status).toBe(200)
+      })
+    })
+
+    describe('when multiple params are provided', () => {
+      it('should return a list of pokemons that match the params', async () => {
+        // Arrange
+        const pokemon0 = await pokemonTestingEntityService.createTestPokemon({
+          name: '123pokemon1',
+          types: ['type0', 'type1'],
+        })
+        await pokemonTestingEntityService.createTestPokemon({
+          name: '123pokemon2',
+          types: ['type1', 'type2'],
+        })
+        await pokemonTestingEntityService.createTestPokemon({
+          name: '123pokemon3',
+          types: ['type2', 'type3'],
+        })
+        const pokemonToSearch = pokemon0.pokemon
+        const pokemonNameToSearch = '23pokemon'
+        const pokemonTypeToSearch = 'type0'
+
+        // Act
+        const server = app.getHttpServer()
+        const response = await request(server)
+          .get('/api/v1/pokemons')
+          .query({ search: pokemonNameToSearch, type: pokemonTypeToSearch })
+
+        // Assert
+        expect(response.body.count).toBe(1)
+        expect(response.body.items).toHaveLength(1)
+        expect(response.body.items[0].id).toStrictEqual(pokemonToSearch.id)
+        expect(response.body.items[0].name).toStrictEqual(pokemonToSearch.name)
+        expect(response.status).toBe(200)
+      })
+    })
+  })
+
   describe('GET /pokemons/types', () => {
     it('should return list of pokemon types', async () => {
       // Arrange
