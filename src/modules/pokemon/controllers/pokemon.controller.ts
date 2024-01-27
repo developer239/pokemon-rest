@@ -50,7 +50,7 @@ export class PokemonController {
     return this.pokemonService.findAllTypes()
   }
 
-  @Get('details/:name')
+  @Get('name/:name')
   @ApiOkResponse({ type: Pokemon })
   @ApiNotFoundResponse({ description: 'Pokemon not found.' })
   findByName(@Param('name') name: string) {
