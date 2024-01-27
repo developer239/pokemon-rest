@@ -1,0 +1,44 @@
+name: Template NestJS API
+
+on:
+  push:
+    paths:
+      - '.github/**'
+      - 'src/**'
+      - '.eslintrc.js'
+      - 'Makefile'
+      - 'yarn.lock'
+      - 'tsconfig*.json'
+
+jobs:
+  build-test:
+    name: api
+    runs-on: ubuntu-20.04
+
+    env:
+      NODE_ENV: ci
+      DATABASE_TEST_URL: postgres://root:secret@localhost:5432/api_db_test
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - uses: harmon758/postgresql-action@v1
+        with:
+          postgresql version: '14'
+          postgresql db: api_db_test
+          postgresql user: root
+          postgresql password: secret
+
+      - run: make install
+
+      - run: make lint-check
+
+      - run: cp .env.template .env
+
+      - name: Run Migrations on Test Database
+        run: |
+          npx env-cmd -f .env env-cmd -f .env.test ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --dataSource=src/modules/database/data-source.ts migration:run
+
+      - run: make test

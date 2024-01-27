@@ -1,0 +1,32 @@
+version: '3.8'
+name: pokemon-api
+
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: ${COMPOSE_PROJECT_NAME}-database
+    environment:
+      POSTGRES_DB: api_db
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - ./.db/data:/var/lib/postgresql/data
+      - ./.db/init:/docker-entrypoint-initdb.d
+    ports:
+      - '5432:5432'
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: ${COMPOSE_PROJECT_NAME}-app
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@database:5432/api_db
+      PORT: 8080
+    env_file:
+      - .env.template
+    ports:
+      - '8080:8080'

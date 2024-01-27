@@ -1,0 +1,15 @@
+name: pokemon-api
+
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: ${COMPOSE_PROJECT_NAME}-database
+    environment:
+      POSTGRES_URL: ${DATABASE_URL}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - ./.db/data:/var/lib/postgresql/data:delegated
+      - ./.db/init:/docker-entrypoint-initdb.d
+    ports:
+      - '5432:5432'
