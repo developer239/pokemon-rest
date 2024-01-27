@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { authConfig, AuthConfigType } from 'src/config/auth.config'
@@ -21,13 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   public async validate(payload: IJwtPayload) {
     const user = await this.authService.validateUserById(payload.id)
     if (!user) {
-      throw new HttpException(
-        {
-          status: HttpStatus.UNAUTHORIZED,
-          message: `unauthorized`,
-        },
-        HttpStatus.UNAUTHORIZED
-      )
+      throw new UnauthorizedException()
     }
 
     return user

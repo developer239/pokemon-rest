@@ -13,7 +13,7 @@ import { bootstrap } from 'src/modules/testing/utilities'
 describe('[users] controller', () => {
   let app: INestApplication
   let databaseService: TestingDatabaseService
-  let authTestingEntityService: UserTestingService
+  let userTestingEntityService: UserTestingService
   let pokemonTestingEntityService: PokemonTestingService
   let jwtService: JwtService
 
@@ -30,7 +30,7 @@ describe('[users] controller', () => {
       // Assert
       expect(response.body.count).toStrictEqual(pokemons.length)
       expect(response.body.items).toHaveLength(pokemons.length)
-      expect(response.status).toBe(200)
+      expect(response.status).toStrictEqual(200)
     })
 
     describe('when limit and offset provided', () => {
@@ -51,7 +51,7 @@ describe('[users] controller', () => {
         // Assert
         expect(response.body.count).toStrictEqual(totalCount)
         expect(response.body.items).toHaveLength(limit)
-        expect(response.status).toBe(200)
+        expect(response.status).toStrictEqual(200)
       })
     })
 
@@ -75,11 +75,11 @@ describe('[users] controller', () => {
           .query({ search: pokemonNameToSearch })
 
         // Assert
-        expect(response.body.count).toBe(1)
+        expect(response.body.count).toStrictEqual(1)
         expect(response.body.items).toHaveLength(1)
         expect(response.body.items[0].id).toStrictEqual(pokemonToSearch.id)
         expect(response.body.items[0].name).toStrictEqual(pokemonToSearch.name)
-        expect(response.status).toBe(200)
+        expect(response.status).toStrictEqual(200)
       })
     })
 
@@ -105,11 +105,11 @@ describe('[users] controller', () => {
           .query({ type: pokemonTypeToSearch })
 
         // Assert
-        expect(response.body.count).toBe(1)
+        expect(response.body.count).toStrictEqual(1)
         expect(response.body.items).toHaveLength(1)
         expect(response.body.items[0].id).toStrictEqual(pokemonToSearch.id)
         expect(response.body.items[0].name).toStrictEqual(pokemonToSearch.name)
-        expect(response.status).toBe(200)
+        expect(response.status).toStrictEqual(200)
       })
     })
 
@@ -118,11 +118,16 @@ describe('[users] controller', () => {
         it('should return a list of pokemons that are favorited by user', async () => {
           // Arrange
           const { user, accessToken } =
-            await authTestingEntityService.createAuthenticatedUser(jwtService)
+            await userTestingEntityService.createAuthenticatedUser(jwtService)
+
+          // favorited pokemon
           const { pokemon } =
             await pokemonTestingEntityService.createTestPokemon(undefined, {
               favoritedBy: [user.id],
             })
+
+          // other pokemons
+          await pokemonTestingEntityService.createTestPokemonCount(3)
 
           // Act
           const server = app.getHttpServer()
@@ -132,11 +137,11 @@ describe('[users] controller', () => {
             .set('Authorization', `Bearer ${accessToken}`)
 
           // Assert
-          expect(response.body.count).toBe(1)
+          expect(response.body.count).toStrictEqual(1)
           expect(response.body.items).toHaveLength(1)
           expect(response.body.items[0].id).toStrictEqual(pokemon.id)
           expect(response.body.items[0].name).toStrictEqual(pokemon.name)
-          expect(response.status).toBe(200)
+          expect(response.status).toStrictEqual(200)
         })
       })
 
@@ -144,10 +149,15 @@ describe('[users] controller', () => {
         it('should return a list of pokemons that are not favorited by user', async () => {
           // Arrange
           const { user, accessToken } =
-            await authTestingEntityService.createAuthenticatedUser(jwtService)
+            await userTestingEntityService.createAuthenticatedUser(jwtService)
+
+          // favorited pokemon
           await pokemonTestingEntityService.createTestPokemon(undefined, {
             favoritedBy: [user.id],
           })
+
+          // other pokemons
+          await pokemonTestingEntityService.createTestPokemonCount(3)
 
           // Act
           const server = app.getHttpServer()
@@ -157,9 +167,9 @@ describe('[users] controller', () => {
             .set('Authorization', `Bearer ${accessToken}`)
 
           // Assert
-          expect(response.body.count).toBe(0)
-          expect(response.body.items).toHaveLength(0)
-          expect(response.status).toBe(200)
+          expect(response.body.count).toStrictEqual(3)
+          expect(response.body.items).toHaveLength(3)
+          expect(response.status).toStrictEqual(200)
         })
       })
     })
@@ -190,11 +200,11 @@ describe('[users] controller', () => {
           .query({ search: pokemonNameToSearch, type: pokemonTypeToSearch })
 
         // Assert
-        expect(response.body.count).toBe(1)
+        expect(response.body.count).toStrictEqual(1)
         expect(response.body.items).toHaveLength(1)
         expect(response.body.items[0].id).toStrictEqual(pokemonToSearch.id)
         expect(response.body.items[0].name).toStrictEqual(pokemonToSearch.name)
-        expect(response.status).toBe(200)
+        expect(response.status).toStrictEqual(200)
       })
     })
   })
@@ -215,7 +225,7 @@ describe('[users] controller', () => {
 
       // Assert
       expect(response.body).toStrictEqual(expectedTypes)
-      expect(response.status).toBe(200)
+      expect(response.status).toStrictEqual(200)
     })
   })
 
@@ -235,7 +245,7 @@ describe('[users] controller', () => {
       // Assert
       expect(response.body.id).toStrictEqual(pokemonId)
       expect(response.body.name).toStrictEqual(pokemonName)
-      expect(response.status).toBe(200)
+      expect(response.status).toStrictEqual(200)
     })
 
     describe('when pokemon does not exist', () => {
@@ -250,7 +260,7 @@ describe('[users] controller', () => {
         )
 
         // Assert
-        expect(response.status).toBe(404)
+        expect(response.status).toStrictEqual(404)
       })
     })
   })
@@ -271,7 +281,7 @@ describe('[users] controller', () => {
       // Assert
       expect(response.body.id).toStrictEqual(pokemonId)
       expect(response.body.name).toStrictEqual(pokemonName)
-      expect(response.status).toBe(200)
+      expect(response.status).toStrictEqual(200)
     })
 
     describe('when pokemon does not exist', () => {
@@ -286,7 +296,7 @@ describe('[users] controller', () => {
         )
 
         // Assert
-        expect(response.status).toBe(404)
+        expect(response.status).toStrictEqual(404)
       })
     })
   })
@@ -296,7 +306,7 @@ describe('[users] controller', () => {
       // Arrange
       const { pokemon } = await pokemonTestingEntityService.createTestPokemon()
       const { accessToken } =
-        await authTestingEntityService.createAuthenticatedUser(jwtService)
+        await userTestingEntityService.createAuthenticatedUser(jwtService)
 
       // Act
       const server = app.getHttpServer()
@@ -306,7 +316,7 @@ describe('[users] controller', () => {
 
       // Assert
       expect(response.body.id).toStrictEqual(pokemon.id)
-      expect(response.status).toBe(201)
+      expect(response.status).toStrictEqual(201)
     })
 
     describe('when pokemon does not exist', () => {
@@ -314,7 +324,7 @@ describe('[users] controller', () => {
         // Arrange
         const pokemonId = 999
         const { accessToken } =
-          await authTestingEntityService.createAuthenticatedUser(jwtService)
+          await userTestingEntityService.createAuthenticatedUser(jwtService)
 
         // Act
         const server = app.getHttpServer()
@@ -323,7 +333,7 @@ describe('[users] controller', () => {
           .set('Authorization', `Bearer ${accessToken}`)
 
         // Assert
-        expect(response.status).toBe(404)
+        expect(response.status).toStrictEqual(404)
       })
     })
 
@@ -340,7 +350,7 @@ describe('[users] controller', () => {
         )
 
         // Assert
-        expect(response.status).toBe(401)
+        expect(response.status).toStrictEqual(401)
       })
     })
   })
@@ -350,7 +360,7 @@ describe('[users] controller', () => {
       // Arrange
       const { pokemon } = await pokemonTestingEntityService.createTestPokemon()
       const { accessToken } =
-        await authTestingEntityService.createAuthenticatedUser(jwtService)
+        await userTestingEntityService.createAuthenticatedUser(jwtService)
 
       // Act
       const server = app.getHttpServer()
@@ -360,7 +370,7 @@ describe('[users] controller', () => {
 
       // Assert
       expect(response.body.id).toStrictEqual(pokemon.id)
-      expect(response.status).toBe(200)
+      expect(response.status).toStrictEqual(200)
     })
 
     describe('when pokemon does not exist', () => {
@@ -368,7 +378,7 @@ describe('[users] controller', () => {
         // Arrange
         const pokemonId = 999
         const { accessToken } =
-          await authTestingEntityService.createAuthenticatedUser(jwtService)
+          await userTestingEntityService.createAuthenticatedUser(jwtService)
 
         // Act
         const server = app.getHttpServer()
@@ -377,7 +387,7 @@ describe('[users] controller', () => {
           .set('Authorization', `Bearer ${accessToken}`)
 
         // Assert
-        expect(response.status).toBe(404)
+        expect(response.status).toStrictEqual(404)
       })
     })
 
@@ -394,7 +404,7 @@ describe('[users] controller', () => {
         )
 
         // Assert
-        expect(response.status).toBe(401)
+        expect(response.status).toStrictEqual(401)
       })
     })
   })
@@ -410,7 +420,7 @@ describe('[users] controller', () => {
     })
 
     databaseService = app.get(TestingDatabaseService)
-    authTestingEntityService = app.get(UserTestingService)
+    userTestingEntityService = app.get(UserTestingService)
     pokemonTestingEntityService = app.get(PokemonTestingService)
     jwtService = app.get(JwtService)
   })

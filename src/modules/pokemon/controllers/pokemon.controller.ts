@@ -39,7 +39,9 @@ export class PokemonController {
     isArray: true,
     type: Pokemon,
   })
-  @ApiForbiddenResponse({ description: 'Forbidden.' })
+  @ApiForbiddenResponse({
+    description: 'Only authenticated users can filter by "isFavorite".',
+  })
   findAll(@Query() query: ListPokemonsQuery, @GetUserPayload() user: User) {
     return this.pokemonService.findAll(query, user)
   }

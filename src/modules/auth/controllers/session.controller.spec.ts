@@ -11,12 +11,12 @@ import { bootstrap } from 'src/modules/testing/utilities'
 describe('[session] controller', () => {
   let app: INestApplication
   let databaseService: TestingDatabaseService
-  let testingEntityService: UserTestingService
+  let userTestingEntityService: UserTestingService
 
   describe('POST /email', () => {
     it('should find user by credentials', async () => {
       // Arrange
-      const { user, meta } = await testingEntityService.createTestUser()
+      const { user, meta } = await userTestingEntityService.createTestUser()
 
       // Act
       const server = app.getHttpServer()
@@ -28,7 +28,7 @@ describe('[session] controller', () => {
         })
 
       // Assert
-      expect(response.status).toBe(200)
+      expect(response.status).toStrictEqual(200)
       expect(response.body).toStrictEqual({
         accessToken: expect.any(String),
         user: {
@@ -41,7 +41,7 @@ describe('[session] controller', () => {
     describe('when user does not exist', () => {
       it('should return 401 Unauthorized', async () => {
         // Arrange
-        const user = testingEntityService.createUserData()
+        const user = userTestingEntityService.createUserData()
 
         // Act
         const server = app.getHttpServer()
@@ -53,14 +53,14 @@ describe('[session] controller', () => {
           })
 
         // Assert
-        expect(response.status).toBe(401)
+        expect(response.status).toStrictEqual(401)
       })
     })
 
     describe('when password is incorrect', () => {
       it('should return 401 Unauthorized', async () => {
         // Arrange
-        const { user } = await testingEntityService.createTestUser()
+        const { user } = await userTestingEntityService.createTestUser()
 
         // Act
         const server = app.getHttpServer()
@@ -72,7 +72,7 @@ describe('[session] controller', () => {
           })
 
         // Assert
-        expect(response.status).toBe(401)
+        expect(response.status).toStrictEqual(401)
       })
     })
   })
@@ -88,7 +88,7 @@ describe('[session] controller', () => {
     })
 
     databaseService = app.get(TestingDatabaseService)
-    testingEntityService = app.get(UserTestingService)
+    userTestingEntityService = app.get(UserTestingService)
   })
 
   beforeEach(async () => {

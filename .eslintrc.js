@@ -7,5 +7,6 @@ module.exports = {
   ],
   rules: {
     'no-void': 1,
+    'vitest/prefer-to-be': 0
   },
 }

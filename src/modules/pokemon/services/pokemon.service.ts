@@ -7,16 +7,13 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from 'src/modules/auth/entities/user.entity'
 import { ListPokemonsQuery } from 'src/modules/pokemon/dto/list-pokemons-query.dto'
-import { EvolutionRequirement } from 'src/modules/pokemon/entities/evolution-requirement.enity'
 import { Pokemon } from 'src/modules/pokemon/entities/pokemon.entity'
 
 @Injectable()
 export class PokemonService {
   constructor(
     @InjectRepository(Pokemon)
-    private readonly pokemonRepository: Repository<Pokemon>,
-    @InjectRepository(EvolutionRequirement)
-    private readonly evolutionRequirementRepository: Repository<EvolutionRequirement>
+    private readonly pokemonRepository: Repository<Pokemon>
   ) {}
 
   async addFavorite(id: number, user?: User): Promise<Pokemon> {
@@ -132,7 +129,9 @@ export class PokemonService {
 
     if (isFavorite !== undefined) {
       if (!user) {
-        throw new ForbiddenException()
+        throw new ForbiddenException(
+          'Only authenticated users can filter by "isFavorite".'
+        )
       }
 
       if (isFavorite) {

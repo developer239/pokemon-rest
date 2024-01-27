@@ -25,7 +25,7 @@ describe('[users] controller', () => {
       const response = await request(server).post('/api/v1/users').send(data)
 
       // Assert
-      expect(response.status).toBe(201)
+      expect(response.status).toStrictEqual(201)
     })
 
     describe('when user already exists', () => {
@@ -43,7 +43,7 @@ describe('[users] controller', () => {
         })
 
         // Assert
-        expect(response.status).toBe(422)
+        expect(response.status).toStrictEqual(422)
       })
     })
   })
@@ -61,7 +61,7 @@ describe('[users] controller', () => {
         .set('Authorization', `Bearer ${accessToken}`)
 
       // Assert
-      expect(response.status).toBe(200)
+      expect(response.status).toStrictEqual(200)
       expect(response.body).toStrictEqual({
         id: user.id,
         email: user.email,
@@ -75,7 +75,7 @@ describe('[users] controller', () => {
         const response = await request(server).get('/api/v1/users/me')
 
         // Assert
-        expect(response.status).toBe(401)
+        expect(response.status).toStrictEqual(401)
       })
     })
   })
