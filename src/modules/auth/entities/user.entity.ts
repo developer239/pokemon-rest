@@ -25,6 +25,7 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   password: string
 
+  @Exclude()
   @ManyToMany(() => Pokemon, (pokemon) => pokemon.favoritedBy, {
     cascade: true,
   })

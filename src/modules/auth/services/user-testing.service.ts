@@ -1,12 +1,7 @@
 /* eslint-disable security/detect-object-injection */
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import {
-  randEmail,
-  randFirstName,
-  randLastName,
-  randPassword,
-} from '@ngneat/falso'
+import { randEmail, randPassword } from '@ngneat/falso'
 import { instanceToPlain, plainToInstance } from 'class-transformer'
 import { User } from 'src/modules/auth/entities/user.entity'
 import { TestingEntityService } from 'src/modules/testing/testing-entity.service'
@@ -17,19 +12,15 @@ export class UserTestingService extends TestingEntityService {
     return {
       email: randEmail(),
       password: randPassword(),
-      firstName: randFirstName(),
-      lastName: randLastName(),
     }
   }
 
   public async createTestUser() {
-    const { email, password, firstName, lastName } = this.createUserData()
+    const { email, password } = this.createUserData()
 
     const user = await this.saveFixture(User, {
       email,
       password,
-      firstName,
-      lastName,
     })
 
     return {

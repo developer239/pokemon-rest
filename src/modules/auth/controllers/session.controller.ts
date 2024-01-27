@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  HttpCode,
+  HttpStatus,
   Post,
   SerializeOptions,
   UseGuards,
@@ -28,6 +30,7 @@ export class SessionController {
     groups: ['me'],
   })
   @Post('email')
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse({
     type: EmailLoginResponse,
   })
