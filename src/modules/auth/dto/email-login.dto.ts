@@ -22,9 +22,5 @@ export class EmailLoginResponse {
   readonly accessToken: string
 
   @ApiProperty()
-  @IsNotEmpty()
-  readonly refreshToken: string
-
-  @ApiProperty()
   readonly user: User
 }
