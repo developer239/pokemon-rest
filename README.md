@@ -100,8 +100,7 @@ classDiagram
 
 ## Testing
 
-Most of the tests are E2E tests, which means that they are testing the whole application, including the database. For
-that.
+Most of the tests are E2E tests and require connection to the database.
 
 - `make test` - run all tests
 - `make coverage` - run test coverage
