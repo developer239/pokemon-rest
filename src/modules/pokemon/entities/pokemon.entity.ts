@@ -76,4 +76,6 @@ export class Pokemon extends BaseEntity {
   @ManyToMany(() => Pokemon, { cascade: true })
   @JoinTable()
   evolutions: Relation<Pokemon>[]
+
+  // TODO: implement isFavorited virtual field (getter)
 }
