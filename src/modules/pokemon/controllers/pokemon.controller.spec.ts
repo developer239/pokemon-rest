@@ -51,6 +51,42 @@ describe('[users] controller', () => {
     })
   })
 
+  describe('GET /pokemons/names/:name', () => {
+    it('should return pokemon by name', async () => {
+      // Arrange
+      const result = await pokemonTestingEntityService.createTestPokemon()
+      const pokemonId = result.pokemon.id
+      const pokemonName = result.pokemon.name
+
+      // Act
+      const server = app.getHttpServer()
+      const response = await request(server).get(
+        `/api/v1/pokemons/name/${pokemonName}`
+      )
+
+      // Assert
+      expect(response.body.id).toStrictEqual(pokemonId)
+      expect(response.body.name).toStrictEqual(pokemonName)
+      expect(response.status).toBe(200)
+    })
+
+    describe('when pokemon does not exist', () => {
+      it('should return 404 status code', async () => {
+        // Arrange
+        const pokemonName = 'some name'
+
+        // Act
+        const server = app.getHttpServer()
+        const response = await request(server).get(
+          `/api/v1/pokemons/name/${pokemonName}`
+        )
+
+        // Assert
+        expect(response.status).toBe(404)
+      })
+    })
+  })
+
   describe('GET /pokemons/types', () => {
     it('should return list of pokemon types', async () => {
       // Arrange
