@@ -2,6 +2,8 @@
 
 ![master](https://github.com/developer239/pokemon-rest/actions/workflows/api-ci.yml/badge.svg)
 
+![preview](./preview.png)
+
 ## Table of Contents
 
 - [Setup](#setup)
