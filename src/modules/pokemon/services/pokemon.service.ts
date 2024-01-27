@@ -87,7 +87,8 @@ export class PokemonService {
   async findAllTypes(): Promise<string[]> {
     const result = await this.pokemonRepository.query(`
       SELECT DISTINCT unnest(string_to_array(types, ',')) AS type
-      FROM pokemon;
+      FROM pokemon
+      ORDER BY type ASC;
     `)
 
     return result.map((row) => row.type)

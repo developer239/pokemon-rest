@@ -25,7 +25,7 @@ import { PokemonService } from 'src/modules/pokemon/services/pokemon.service'
 
 @ApiTags('Pokemon')
 @Controller({
-  path: 'pokemon',
+  path: 'pokemons',
   version: '1',
 })
 export class PokemonController {
