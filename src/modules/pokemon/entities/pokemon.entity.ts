@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer'
 import {
   Column,
   Entity,
@@ -59,6 +60,7 @@ export class Pokemon extends BaseEntity {
   @Column()
   maxHP: number
 
+  @Exclude()
   @ManyToMany(() => User, (user) => user.favoritePokemons)
   favoritedBy: Relation<User>[]
 
