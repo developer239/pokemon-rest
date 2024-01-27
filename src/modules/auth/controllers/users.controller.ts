@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Post,
-  UseGuards,
-} from '@nestjs/common'
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBearerAuth,
@@ -41,7 +34,6 @@ export class UsersController {
   @Get('me')
   @ApiBearerAuth()
   @ApiOkResponse({
-    status: HttpStatus.OK,
     type: Me,
   })
   @ApiForbiddenResponse({ description: 'Forbidden.' })
