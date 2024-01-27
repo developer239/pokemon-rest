@@ -3,7 +3,6 @@ import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 import * as bcrypt from 'bcrypt'
 import { Repository } from 'typeorm'
-import { EmailLoginRequest } from 'src/modules/auth/dto/email-login.dto'
 import { EmailRegisterRequest } from 'src/modules/auth/dto/email-register.dto'
 import { User } from 'src/modules/auth/entities/user.entity'
 
@@ -41,27 +40,7 @@ export class AuthService {
     return user
   }
 
-  async login(input: EmailLoginRequest) {
-    const user = await this.validateUserByEmailPassword(
-      input.email,
-      input.password
-    )
-
-    if (!user) {
-      throw new UnauthorizedException()
-    }
-
-    return this.createLoginResponse(user)
-  }
-
-  async register(input: EmailRegisterRequest) {
-    const user = this.usersRepository.create(input)
-    await this.usersRepository.save(user)
-
-    return this.createLoginResponse(user)
-  }
-
-  createLoginResponse(user: User) {
+  login(user: User) {
     const token = this.jwtService.sign({
       id: user.id,
     })
@@ -70,5 +49,12 @@ export class AuthService {
       accessToken: token,
       user,
     }
+  }
+
+  async register(input: EmailRegisterRequest) {
+    const user = this.usersRepository.create(input)
+    await this.usersRepository.save(user)
+
+    return this.login(user)
   }
 }
