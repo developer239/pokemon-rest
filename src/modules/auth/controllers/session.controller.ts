@@ -4,7 +4,6 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  SerializeOptions,
   UseGuards,
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
@@ -26,9 +25,6 @@ export class SessionController {
   constructor(public service: AuthService) {}
 
   @UseGuards(AuthGuard('local'))
-  @SerializeOptions({
-    groups: ['me'],
-  })
   @Post('email')
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({

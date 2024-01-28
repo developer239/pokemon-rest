@@ -63,9 +63,7 @@ export class UserTestingService extends TestingEntityService {
     }
 
     return {
-      user: instanceToPlain(plainToInstance(User, user, { groups: ['me'] }), {
-        groups: ['me'],
-      }),
+      user: instanceToPlain(plainToInstance(User, user)),
       accessToken,
     }
   }
