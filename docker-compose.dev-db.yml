@@ -1,4 +1,5 @@
-name: pokemon-api
+version: '3.8'
+name: pokemon-api-rest-dev
 
 services:
   database:

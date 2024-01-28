@@ -39,7 +39,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options)
   SwaggerModule.setup('docs', app, document)
 
-  await app.listen(appConfigValues.port)
+  await app.listen(appConfigValues.port, appConfigValues.address)
 
   Logger.log(
     `\x1b[34m Running on: http://localhost:${appConfigValues.port} \x1b[34m`,

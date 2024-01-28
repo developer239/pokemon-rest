@@ -6,6 +6,7 @@ export const appConfigSchema = {
   APP_NAME: Joi.string().required(),
   API_PREFIX: Joi.string().default('api'),
   PORT: Joi.number().port().required(),
+  ADDRESS: Joi.string().hostname(),
 }
 
 export const appConfig = registerAs('app', () => ({
@@ -13,6 +14,7 @@ export const appConfig = registerAs('app', () => ({
   name: process.env.APP_NAME,
   workingDirectory: process.env.PWD || process.cwd(),
   port: process.env.PORT ? parseInt(process.env.PORT, 10) : 8080,
+  address: process.env.ADDRESS ? process.env.ADDRESS : '0.0.0.0',
   apiPrefix: process.env.API_PREFIX || 'api',
 }))
 
