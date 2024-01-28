@@ -69,6 +69,7 @@ export class PokemonTestingService extends TestingEntityService {
       ],
       evolutionRequirements: this.createEvolutionRequirementData(),
       favoritedBy: relations?.favoritedBy?.map((id) => ({ id })) ?? [],
+      evolutions: relations?.evolutions?.map((id) => ({ id })) ?? [],
     })
 
     return {
@@ -126,9 +127,9 @@ interface IPokemonTestData {
   favoritedBy?: number[]
 }
 
-// TODO: support evolutions
 interface IPokemonTestDataRelations {
   favoritedBy?: number[]
+  evolutions?: number[]
 }
 
 interface IPokemonAttackTestData {

@@ -291,6 +291,33 @@ describe('[users] controller', () => {
   })
 
   describe('GET /pokemons/:id', () => {
+    it('should return pokemon by id with list of evolutions', async () => {
+      // Arrange
+      const { pokemon: evolution1 } =
+        await pokemonTestingEntityService.createTestPokemon()
+      const { pokemon: evolution2 } =
+        await pokemonTestingEntityService.createTestPokemon()
+
+      // favorited pokemon
+      const { pokemon } = await pokemonTestingEntityService.createTestPokemon(
+        undefined,
+        {
+          evolutions: [evolution1.id, evolution2.id],
+        }
+      )
+
+      // Act
+      const server = app.getHttpServer()
+      const response = await request(server).get(
+        `/api/v1/pokemons/${pokemon.id}`
+      )
+
+      // Assert
+      expect(response.body.id).toStrictEqual(pokemon.id)
+      expect(response.body.evolutions).toHaveLength(2)
+      expect(response.status).toStrictEqual(200)
+    })
+
     it('should return pokemon by id', async () => {
       // Arrange
       const result = await pokemonTestingEntityService.createTestPokemon()
