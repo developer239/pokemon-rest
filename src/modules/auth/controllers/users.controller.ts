@@ -3,9 +3,9 @@ import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
-  ApiForbiddenResponse,
   ApiOkResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 import { GetUserPayload } from 'src/modules/auth/decorators/user.decorator'
 import { EmailLoginResponse } from 'src/modules/auth/dto/email-login.dto'
@@ -36,7 +36,7 @@ export class UsersController {
   @ApiOkResponse({
     type: Me,
   })
-  @ApiForbiddenResponse({ description: 'Forbidden.' })
+  @ApiUnauthorizedResponse()
   public me(@GetUserPayload() user: User) {
     return user
   }

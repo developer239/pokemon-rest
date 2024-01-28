@@ -1,7 +1,7 @@
 import {
-  ForbiddenException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ILike, Repository } from 'typeorm'
@@ -129,7 +129,7 @@ export class PokemonService {
 
     if (isFavorite !== undefined) {
       if (!user) {
-        throw new ForbiddenException(
+        throw new UnauthorizedException(
           'Only authenticated users can filter by "isFavorite".'
         )
       }

@@ -10,10 +10,10 @@ import {
 import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBearerAuth,
-  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 import { Public } from 'src/modules/auth/decorators/public.decorator'
 import { GetUserPayload } from 'src/modules/auth/decorators/user.decorator'
@@ -39,7 +39,7 @@ export class PokemonController {
     isArray: true,
     type: Pokemon,
   })
-  @ApiForbiddenResponse({
+  @ApiUnauthorizedResponse({
     description: 'Only authenticated users can filter by "isFavorite".',
   })
   findAll(@Query() query: ListPokemonsQuery, @GetUserPayload() user: User) {
@@ -71,7 +71,7 @@ export class PokemonController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: Pokemon })
   @ApiNotFoundResponse({ description: 'Pokemon not found.' })
-  @ApiForbiddenResponse({ description: 'Forbidden.' })
+  @ApiUnauthorizedResponse()
   addFavorite(@Param('id') id: number, @GetUserPayload() user: User) {
     return this.pokemonService.addFavorite(id, user)
   }
@@ -81,7 +81,7 @@ export class PokemonController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: Pokemon })
   @ApiNotFoundResponse({ description: 'Pokemon not found.' })
-  @ApiForbiddenResponse({ description: 'Forbidden.' })
+  @ApiUnauthorizedResponse()
   removeFavorite(@Param('id') id: number, @GetUserPayload() user: User) {
     return this.pokemonService.removeFavorite(id, user)
   }

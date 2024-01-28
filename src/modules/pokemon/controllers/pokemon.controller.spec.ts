@@ -172,6 +172,31 @@ describe('[users] controller', () => {
           expect(response.status).toStrictEqual(200)
         })
       })
+
+      describe('when user is not authenticated', () => {
+        it('should return 403 status code', async () => {
+          // Arrange
+          const { user } =
+            await userTestingEntityService.createAuthenticatedUser(jwtService)
+
+          // favorited pokemon
+          await pokemonTestingEntityService.createTestPokemon(undefined, {
+            favoritedBy: [user.id],
+          })
+
+          // other pokemons
+          await pokemonTestingEntityService.createTestPokemonCount(3)
+
+          // Act
+          const server = app.getHttpServer()
+          const response = await request(server)
+            .get('/api/v1/pokemons')
+            .query({ isFavorite: true })
+
+          // Assert
+          expect(response.status).toStrictEqual(401)
+        })
+      })
     })
 
     describe('when multiple params are provided', () => {
