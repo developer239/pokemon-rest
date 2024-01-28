@@ -1,4 +1,3 @@
-/* eslint-disable security/detect-object-injection */
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { randEmail, randPassword } from '@ngneat/falso'

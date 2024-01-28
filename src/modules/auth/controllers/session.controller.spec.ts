@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function, max-lines */
 import { INestApplication } from '@nestjs/common'
 import request from 'supertest'
 import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest'

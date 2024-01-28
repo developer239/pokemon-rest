@@ -126,6 +126,7 @@ interface IPokemonTestData {
   favoritedBy?: number[]
 }
 
+// TODO: support evolutions
 interface IPokemonTestDataRelations {
   favoritedBy?: number[]
 }

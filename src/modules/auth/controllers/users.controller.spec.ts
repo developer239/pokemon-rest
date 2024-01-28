@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function, max-lines */
 import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import request from 'supertest'
