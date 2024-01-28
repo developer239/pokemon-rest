@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: production
-    container_name: ${COMPOSE_PROJECT_NAME}-app
+    container_name: ${COMPOSE_PROJECT_NAME}-app-rest
     depends_on:
       - database
     environment:
