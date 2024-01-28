@@ -1,4 +1,4 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger'
+import { ApiProperty, IntersectionType } from '@nestjs/swagger'
 import { IsArray, IsInt, IsNotEmpty, IsNumber, IsString } from 'class-validator'
 import { Attack } from 'src/modules/pokemon/dto/attack.dto'
 import { EvolutionRequirement } from 'src/modules/pokemon/dto/evolution-requirement.dto'
@@ -61,9 +61,9 @@ class Base {
   evolutionRequirements: EvolutionRequirement
 }
 
-export class Evolution extends PartialType(Base) {}
+export class Evolution extends IntersectionType(Base) {}
 
-export class Pokemon extends PartialType(Base) {
+export class Pokemon extends IntersectionType(Base) {
   @ApiProperty({
     type: [Evolution],
   })

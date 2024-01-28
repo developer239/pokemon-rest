@@ -19,6 +19,7 @@ export class Attack {
   type: string
 
   @ApiProperty({ enum: AttackCategory })
+  @IsNotEmpty()
   @IsEnum(AttackCategory)
   category: AttackCategory
 
