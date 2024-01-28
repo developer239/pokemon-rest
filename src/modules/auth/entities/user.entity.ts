@@ -18,11 +18,11 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ unique: true, nullable: true })
+  @Column({ unique: true })
   email: string
 
   @Exclude()
-  @Column({ nullable: true })
+  @Column()
   password: string
 
   @Exclude()

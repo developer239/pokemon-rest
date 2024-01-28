@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm'
 
-export class Initial1706119173265 implements MigrationInterface {
-  name = 'Initial1706119173265'
+export class Initial1706455922717 implements MigrationInterface {
+  name = 'Initial1706455922717'
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -20,7 +20,7 @@ export class Initial1706119173265 implements MigrationInterface {
       `CREATE INDEX "IDX_1cb8fc72a68e5a601312c642c8" ON "pokemon" ("name") `
     )
     await queryRunner.query(
-      `CREATE TABLE "user" ("id" SERIAL NOT NULL, "email" character varying, "password" character varying, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`
+      `CREATE TABLE "user" ("id" SERIAL NOT NULL, "email" character varying NOT NULL, "password" character varying NOT NULL, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`
     )
     await queryRunner.query(
       `CREATE TABLE "pokemon_attacks_attack" ("pokemonId" integer NOT NULL, "attackId" integer NOT NULL, CONSTRAINT "PK_6a50d477a3c708c84f7a1954b75" PRIMARY KEY ("pokemonId", "attackId"))`
